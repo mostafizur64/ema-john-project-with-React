@@ -9,34 +9,49 @@ const Shop = () => {
     const [Products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
 
-    const handleAddToCard =(product)=>{
+    const handleAddToCard = (product) => {
         const newCart = [...cart, product];
         setCart(newCart);
         addToDb(product.id);
     }
-    useEffect(()=>{
-        fetch('products.json').then(res=>res.json()).then(data=>setProducts(data));
+    useEffect(() => {
+        fetch('products.json').then(res => res.json()).then(data => setProducts(data));
 
-        
-    },[])
-    useEffect(()=>{
+
+    }, [])
+    useEffect(() => {
+        const saveCart =[];
         const storedCart = getShoppingCart();
-        console.log(storedCart);
-    },[])
+        // get id of the added product 
+        for (const id in storedCart) {
+            //get product form products state by using id
+            const addedProduct = Products.find((product) => product.id === id);
+            if (addedProduct) {
+                // added quantity 
+                const quantity = storedCart[id];
+                addedProduct.quantity = quantity;
+                // added product to save cart 
+                saveCart.push(addedProduct);
+            }
+            console.log('added product ',addedProduct);
+
+        }
+        setCart(saveCart);
+    }, [Products])
 
 
     return (
         <div className='Shop-container'>
             <div className='Product-container'>
-              {
-              Products.map((product) =><Product
-               key={product.id} 
-               product={product} 
-               handleAddToCard={handleAddToCard}></Product>)
-              }
+                {
+                    Products.map((product) => <Product
+                        key={product.id}
+                        product={product}
+                        handleAddToCard={handleAddToCard}></Product>)
+                }
             </div>
             <div className='card-container'>
-               <Cart cart= {cart}></Cart>
+                <Cart cart={cart}></Cart>
             </div>
         </div>
     );
