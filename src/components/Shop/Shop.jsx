@@ -52,7 +52,7 @@ const Shop = () => {
                 // added product to save cart 
                 saveCart.push(addedProduct);
             }
-            console.log('added product ',addedProduct);
+            // console.log('added product ',addedProduct);
 
         }
         setCart(saveCart);
